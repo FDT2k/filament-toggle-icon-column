@@ -1,12 +1,12 @@
 @php
     $state = $getState();
-    $size = $getSize() ?? 'lg';
+    $size = $getSize();
     $stateColor = $getStateColor();
     $stateIcon = $getStateIcon();
     $hoverColor = $getHoverColor();
 
     $iconSize ??= $size;
-
+    $recordKey = $getRecordKey();
     $iconSize = match ($iconSize) {
         'xs' => 'h-3 w-3',
         'sm' => 'h-4 w-4',
@@ -38,10 +38,27 @@
             default => 'hover:'.$hoverColor,
         },
     ]);
+
+
+    $alignment = $getAlignment();
+    $attributes = $attributes->merge($getExtraAttributes(), escape: false)->class([
+        $alignment instanceof \Filament\Support\Enums\Alignment
+            ? "fi-align-{$alignment->value}"
+            : (is_string($alignment)
+                ? $alignment
+                : ''),
+    ]);
 @endphp
+
+
 
 <div 
     wire:key="{{ $this->getId() }}.table.record.{{ $recordKey }}.column.{{ $getName() }}.toggle-column.{{ $state ? 'true' : 'false' }}"
+     {{ 
+            $attributes
+                
+                ->class(['filament-toggle-icon-column'])
+        }}
 >
     <div
         x-data="{
@@ -50,11 +67,7 @@
             isLoading: false,
         }"
         wire:ignore
-        {{ 
-            $attributes
-                ->merge($getExtraAttributes(), escape: false)
-                ->class(['filament-toggle-icon-column'])
-        }}
+       
     >
         <button
             role="switch"

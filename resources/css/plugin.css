@@ -1,1 +1,22 @@
 @tailwind utilities;
+
+
+.filament-toggle-icon-column {
+    @apply flex flex-row w-full;
+
+    &.fi-align-center {
+        @apply justify-center;
+    }
+
+    &.fi-align-start {
+        @apply justify-start;
+    }
+
+    &.fi-align-end {
+        @apply justify-end;
+    }
+
+    &.fi-align-justify {
+        @apply justify-between;
+    }
+}
