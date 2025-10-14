@@ -1,4 +1,6 @@
 @php
+    use Filament\Support\Enums\IconSize;
+
     $state = $getState();
     $size = $getSize();
     $stateColor = $getStateColor();
@@ -7,13 +9,23 @@
 
     $iconSize ??= $size;
     $recordKey = $getRecordKey();
-    $iconSize = match ($iconSize) {
+
+    $iconSizeEnum = match ($iconSize) {
+        'xs' => IconSize::ExtraSmall,
+        'sm' => IconSize::Small,
+        'md' => IconSize::Medium,
+        'lg' => IconSize::Large,
+        'xl' => IconSize::ExtraLarge,
+        default => null,
+    };
+
+    $iconSizeClasses = match ($iconSize) {
         'xs' => 'h-3 w-3',
         'sm' => 'h-4 w-4',
         'md' => 'h-5 w-5',
         'lg' => 'h-6 w-6',
         'xl' => 'h-7 w-7',
-        default => $iconSize,
+        default => '',
     };
 
     $iconClasses = \Illuminate\Support\Arr::toCssClasses([
@@ -38,7 +50,6 @@
             default => 'hover:'.$hoverColor,
         },
     ]);
-
 
     $alignment = $getAlignment();
     $attributes = $attributes->merge($getExtraAttributes(), escape: false)->class([
@@ -111,9 +122,9 @@
                 @if ($stateIcon)
                     <x-filament::icon
                         :icon="$stateIcon"
-                        :size="$iconSize"
-                        :class="$iconClasses . ' ' . $iconSize"
-                    />                    
+                        :size="$iconSizeEnum"
+                        :class="$iconClasses . ' ' . $iconSizeClasses"
+                    />
                 @endif
             </span>
         </button>
